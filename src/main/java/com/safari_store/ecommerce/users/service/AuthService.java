@@ -102,7 +102,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword())
             );
 
-            String accessToken = jwtUtil.generateToken(user);
+            String accessToken = jwtUtil.generateAccessToken(user);
             String refreshToken = jwtUtil.generateRefreshToken(user);
 
             AuthResponse.AuthData authData = AuthResponse.AuthData.builder()
@@ -308,5 +308,56 @@ public class AuthService {
         Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
         return String.valueOf(otp);
+    }
+
+    public ApiResponse<AuthResponse.AuthData> refreshToken(TokenRefreshRequest request){
+        try{
+            String refreshToken = request.getRefreshToken();
+
+            if (!jwtUtil.validateToken(refreshToken)){
+                return ApiResponse.error(
+                        "Invalid or expired refresh token",
+                        null
+                );
+            }
+            String tokenType = jwtUtil.extractTokenType(refreshToken);
+            if (!"refresh".equals(tokenType)) {
+                return ApiResponse.error(
+                        "Invalid token type",
+                        null
+                );
+            }
+            String username = jwtUtil.extractUsername(refreshToken);
+            Optional<User> userOpt = userRepository.findByUsernameIgnoreCase(username)
+                    .or(() -> userRepository.findByEmailIgnoreCase(username));
+
+            if (userOpt.isEmpty()){
+                return ApiResponse.error(
+                        "User not found",
+                        null
+                );
+            }
+            User user = userOpt.get();
+
+            String newAccessToken = jwtUtil.generateAccessToken(user);
+            String newRefreshToken = jwtUtil.generateRefreshToken(user);
+
+            AuthResponse.AuthData authData = AuthResponse.AuthData.builder()
+                    .accessToken(newAccessToken)
+                    .refreshToken(newRefreshToken)
+                    .tokenType("Bearer")
+                    .expiresIn(jwtUtil.getAccessTokenExpiration() / 1000)
+                    .build();
+
+            return ApiResponse.success(
+                    "Token refreshed successfully",
+                    authData
+            );
+        } catch (Exception e){
+            log.error("Token refresh error: ", e);
+            return ApiResponse.error(
+                    "Failed to refresh token",e.getMessage()
+            );
+        }
     }
 }
