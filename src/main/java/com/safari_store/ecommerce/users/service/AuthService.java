@@ -360,4 +360,27 @@ public class AuthService {
             );
         }
     }
+
+    public ApiResponse<?> logout(LogoutRequest request){
+        try{
+            String refreshToken = request.getRefreshToken();
+
+            if (refreshToken == null || refreshToken.trim().isEmpty()){
+                return ApiResponse.error(
+                        "Refresh token is required",
+                        null
+                );
+            }
+            return ApiResponse.success(
+                    "Logout successfull",
+                    null
+            );
+        } catch (Exception e){
+            log.error("Logout error: ", e);
+            return ApiResponse.error(
+                    "Logout failed",e.getMessage()
+            );
+        }
+    }
+
 }
