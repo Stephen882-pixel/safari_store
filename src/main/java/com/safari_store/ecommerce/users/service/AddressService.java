@@ -3,6 +3,7 @@ package com.safari_store.ecommerce.users.service;
 import com.safari_store.ecommerce.users.User;
 import com.safari_store.ecommerce.users.dtos.request.AddressRequest;
 import com.safari_store.ecommerce.users.dtos.response.AddressResponse;
+import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.models.Address;
 import com.safari_store.ecommerce.users.repository.AddressRepository;
 import com.safari_store.ecommerce.users.repository.UserRepository;
@@ -98,6 +99,27 @@ public class AddressService {
 
         Address updatedAddress = addressRepository.save(address);
         return mapToAddressResponse(updatedAddress);
+    }
+
+    @Transactional
+    public ApiResponse<AddressResponse> deleteAddress(Long addressId){
+        User currentUser = userService.getCurrentUser();
+        Address address = addressRepository.findByIdAndUserId(addressId,currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        AddressResponse addressInfo = AddressResponse.builder()
+                .id(address.getId())
+                .town(address.getTown())
+                .street(address.getStreet())
+                .addressType(address.getAddressType())
+                .build();
+        addressRepository.delete(address);
+
+        return ApiResponse.<AddressResponse> builder()
+                .message("Address deleted successfully")
+                .status("sucess")
+                .data(addressInfo)
+                .build();
     }
 
     private AddressResponse mapToAddressResponse(Address address) {
