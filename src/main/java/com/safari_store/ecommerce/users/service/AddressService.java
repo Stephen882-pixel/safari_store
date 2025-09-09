@@ -62,6 +62,44 @@ public class AddressService {
         return mapToAddressResponse(address);
     }
 
+    @Transactional
+    public AddressResponse updateAddress(Long addressId,AddressRequest request){
+        User currentUser = userService.getCurrentUser();
+        Address address = addressRepository.findByIdAndUserId(addressId,currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        if (request.getAddressType() != null){
+            address.setAddressType(request.getAddressType());
+        }
+        if (request.getCountry() != null){
+            address.setCountry(request.getCountry());
+        }
+        if (request.getCounty() != null){
+            address.setCounty(request.getCounty());
+        }
+        if (request.getConstituency()!=null){
+            address.setConstituency(request.getConstituency());
+        }
+        if (request.getTown() != null){
+            address.setTown(request.getTown());
+        }
+        if (address.getEstate() != null){
+            address.setEstate(request.getEstate());
+        }
+        if (address.getStreet() != null){
+            address.setStreet(request.getStreet());
+        }
+        if (address.getLandmark() != null){
+            address.setLandmark(request.getLandmark());
+        }
+        if (address.getPostalCode() != null){
+            address.setPostalCode(request.getPostalCode());
+        }
+
+        Address updatedAddress = addressRepository.save(address);
+        return mapToAddressResponse(updatedAddress);
+    }
+
     private AddressResponse mapToAddressResponse(Address address) {
         return AddressResponse.builder()
                 .id(address.getId())
