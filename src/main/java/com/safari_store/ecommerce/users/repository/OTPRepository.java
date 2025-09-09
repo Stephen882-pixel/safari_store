@@ -2,6 +2,7 @@ package com.safari_store.ecommerce.users.repository;
 
 import com.safari_store.ecommerce.users.User;
 import com.safari_store.ecommerce.users.models.OTP;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OTPRepository {
+public interface OTPRepository  extends JpaRepository<OTP, Long> {
     Optional<OTP> findByUserAndIsVerifiedFalseOrderByCreatedAtDesc(User user);
 
     List<OTP> findByUserAndIsVerifiedFalse(User user);

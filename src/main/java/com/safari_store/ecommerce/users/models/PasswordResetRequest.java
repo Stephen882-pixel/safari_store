@@ -1,12 +1,12 @@
 package com.safari_store.ecommerce.users.models;
 
+import com.safari_store.ecommerce.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -25,6 +25,9 @@ public class PasswordResetRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column(unique = true,nullable = false)
     private String token;
