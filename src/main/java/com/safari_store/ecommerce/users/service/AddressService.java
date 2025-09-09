@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.users.service;
 
 import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.dtos.request.AddressRequest;
 import com.safari_store.ecommerce.users.dtos.response.AddressResponse;
 import com.safari_store.ecommerce.users.models.Address;
 import com.safari_store.ecommerce.users.repository.AddressRepository;
@@ -30,6 +31,26 @@ public class AddressService {
         return addresses.stream()
                 .map(this::mapToAddressResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public AddressResponse createAddress(AddressRequest request){
+        User currentUser = userService.getCurrentUser();
+
+        Address address = new Address();
+        address.setUser(currentUser);
+        address.setAddressType(request.getAddressType());
+        address.setCountry(request.getCountry());
+        address.setCounty(request.getCounty());
+        address.setConstituency(request.getConstituency());
+        address.setTown(request.getTown());
+        address.setStreet(request.getStreet());
+        address.setEstate(request.getEstate());
+        address.setPostalCode(request.getPostalCode());
+        address.setLandmark(request.getLandmark());
+
+        Address savedAddress = addressRepository.save(address);
+        return mapToAddressResponse(savedAddress);
     }
 
     private AddressResponse mapToAddressResponse(Address address) {
