@@ -53,6 +53,15 @@ public class AddressService {
         return mapToAddressResponse(savedAddress);
     }
 
+    @Transactional(readOnly = true)
+    public AddressResponse getAddress(Long addressId){
+        User currentUser = userService.getCurrentUser();
+        Address address = addressRepository.findByIdAndUserId(addressId,currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        return mapToAddressResponse(address);
+    }
+
     private AddressResponse mapToAddressResponse(Address address) {
         return AddressResponse.builder()
                 .id(address.getId())
