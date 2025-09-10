@@ -13,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -28,6 +26,8 @@ public class UserController {
     private final UserService userService;
     private final AddressService addressService;
 
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfile(){
         log.info("Getting user profile");
         UserResponse userResponse = userService.getUserProfile();
@@ -38,6 +38,8 @@ public class UserController {
         ));
     }
 
+    @PutMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @Valid @RequestBody UserProfileUpdateRequest request
             ){
@@ -56,6 +58,8 @@ public class UserController {
         }
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<PaginatedUsersResponse>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -76,6 +80,8 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteAccount(){
         log.info("Deleting user account");
         userService.deleteAccount();
