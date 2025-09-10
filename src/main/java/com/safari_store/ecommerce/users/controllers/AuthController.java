@@ -1,16 +1,19 @@
 package com.safari_store.ecommerce.users.controllers;
 
 
+import com.safari_store.ecommerce.users.User;
 import com.safari_store.ecommerce.users.dtos.request.*;
 //import com.safari_store.ecommerce.users.dtos.request.PasswordResetRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
 import com.safari_store.ecommerce.users.service.AuthService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,8 +89,17 @@ public class AuthController {
         HttpStatus status = "success".equals(response.getStatus()) ?
                 HttpStatus.OK : HttpStatus.BAD_REQUEST;
 
-        return ResponseEntity.status().body(response);
+        return ResponseEntity.status(status).body(response);
     }
 
+    public ResponseEntity<ApiResponse<?>> changePassword(@Valid @RequestBody ChangePasswordRequest request,
+                                                         @Parameter(hidden = true) @AuthenticationPrincipal User currentUser){
+        log.info("Password change request for user: {}",currentUser.getUsername());
+        ApiResponse<?> response = authService.changePassword(request,currentUser);
 
+        HttpStatus status = "success".equals(response.getStatus()) ?
+                HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(response);
+    }
 }
