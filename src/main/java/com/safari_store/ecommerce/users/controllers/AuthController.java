@@ -79,4 +79,15 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+    
+    public ResponseEntity<ApiResponse<?>> resetPassword(@Valid @RequestBody ResetPasswordRequest request){
+        log.info("Password reset confirmation for email: {}",request.getEmail());
+        ApiResponse<?> response = authService.resetPassword(request);
+        HttpStatus status = "success".equals(response.getStatus()) ?
+                HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status().body(response);
+    }
+
+
 }
