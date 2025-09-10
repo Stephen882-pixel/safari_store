@@ -2,6 +2,7 @@ package com.safari_store.ecommerce.users.controllers;
 
 
 import com.safari_store.ecommerce.users.dtos.request.LoginRequest;
+import com.safari_store.ecommerce.users.dtos.request.LogoutRequest;
 import com.safari_store.ecommerce.users.dtos.request.RegisterRequest;
 import com.safari_store.ecommerce.users.dtos.request.VerifyOTPRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
@@ -55,5 +56,10 @@ public class AuthController {
         return ResponseEntity.status(status).body(response);
     }
 
+    public ResponseEntity<ApiResponse<?>>  logout(@Valid @RequestBody LogoutRequest request){
+        log.info("Log out request recieved");
+        ApiResponse<?> response = authService.logout(request);
 
+        return ResponseEntity.ok(response);
+    }
 }
