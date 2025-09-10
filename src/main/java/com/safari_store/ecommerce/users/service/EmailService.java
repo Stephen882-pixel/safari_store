@@ -80,4 +80,33 @@ public class EmailService {
         }
     }
 
+    public void sendWelcomeEmail(User user){
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(user.getEmail());
+            message.setSubject("Welcome to " + appName + "!");
+
+            String emailBody = String.format(
+                    "Dear %s,\n\n" +
+                            "Welcome to %s! Your email has been successfully verified.\n\n" +
+                            "You can now log in to your account and start exploring our platform.\n\n" +
+                            "If you have any questions or need support, feel free to contact us.\n\n" +
+                            "Thank you for joining us!\n\n" +
+                            "Best regards,\n" +
+                            "The %s Team",
+                    user.getFirstName(),
+                    appName,
+                    appName
+            );
+
+            message.setText(emailBody);
+            mailSender.send(message);
+
+            log.info("Welcome email sent successfully to: {}", user.getEmail());
+        } catch (Exception e){
+            log.error("Failed to send welcome email to: {}", user.getEmail(), e);
+        }
+    }
+
 }
