@@ -91,4 +91,15 @@ public class AddressController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AddressResponse>> deleteAddress(@PathVariable Long id){
+        log.info("Deleting address with id {}", id);
+        try {
+            ApiResponse<AddressResponse> response = addressService.deleteAddress(id);
+            return ResponseEntity.ok(response);
+        }catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
