@@ -26,7 +26,7 @@ public class AddressController {
 
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Appendable<List<AddressResponse>>> getUserAddresses(){
+    public ResponseEntity<ApiResponse<List<AddressResponse>>> getUserAddresses(){
         log.info("Fetching user addresses");
         List<AddressResponse> addresses = addressService.getUserAddresses();
 
@@ -54,6 +54,20 @@ public class AddressController {
                        e.getMessage(),
                        null
                     ));
+        }
+    }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AddressResponse>> getAddress(@PathVariable Long id){
+        log.info("Getting address with id {}", id);
+        try {
+            AddressResponse addrress = addressService.getAddress(id);
+            return ResponseEntity.ok(ApiResponse.success(
+               "Address retrieved successfully",
+                    addrress
+            ));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
