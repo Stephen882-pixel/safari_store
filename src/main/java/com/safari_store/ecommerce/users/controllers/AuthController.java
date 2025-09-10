@@ -2,6 +2,7 @@ package com.safari_store.ecommerce.users.controllers;
 
 
 import com.safari_store.ecommerce.users.dtos.request.*;
+//import com.safari_store.ecommerce.users.dtos.request.PasswordResetRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
 import com.safari_store.ecommerce.users.service.AuthService;
@@ -70,5 +71,12 @@ public class AuthController {
                 HttpStatus.OK : HttpStatus.BAD_REQUEST;
 
         return ResponseEntity.status(status).body(response);
+    }
+    
+    public ResponseEntity<ApiResponse<?>> requestPasswordReset(@Valid @RequestBody PasswordRequestReset  request){
+        log.info("Password reset request for email : {}",request.getEmail());
+        ApiResponse<?> response = authService.requestPasswordReset(request);
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -194,7 +194,7 @@ public class AuthService {
     }
 
     @Transactional
-    public ApiResponse<?> requestPasswordReset(PasswordResetRequest request) {
+    public ApiResponse<?> requestPasswordReset(PasswordRequestReset request) {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
             if (userOpt.isPresent()) {
