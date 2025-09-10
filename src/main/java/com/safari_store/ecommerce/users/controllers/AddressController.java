@@ -1,16 +1,17 @@
 package com.safari_store.ecommerce.users.controllers;
 
+import com.safari_store.ecommerce.users.dtos.request.AddressRequest;
 import com.safari_store.ecommerce.users.dtos.response.AddressResponse;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.service.AddressService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +34,27 @@ public class AddressController {
            "Addresses retrieved succesfully",
                 addresses
         ));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AddressResponse>> createAddress(
+            @Valid @RequestBody AddressRequest request
+            ){
+        log.info("Creating address request");
+        try {
+            AddressResponse addrress = addressService.createAddress(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(
+               "Adderss create successfully",
+               addrress
+            ));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error(
+                       e.getMessage(),
+                       null
+                    ));
+        }
     }
 
 }
