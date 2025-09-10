@@ -109,4 +109,30 @@ public class EmailService {
         }
     }
 
+    public void sendPasswordChangeConfirmation(User user){
+        try{
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(user.getEmail());
+            message.setSubject(appName + " - Password Changed Successfully");
+
+            String emailBody = String.format(
+                    "Dear %s,\n\n" +
+                            "Your password for %s has been successfully changed.\n\n" +
+                            "If you didn't make this change, please contact our support team immediately.\n\n" +
+                            "Best regards,\n" +
+                            "The %s Team",
+                    user.getFirstName(),
+                    appName,
+                    appName
+            );
+
+            message.setText(emailBody);
+            mailSender.send(message);
+
+            log.info("Password change confirmation email sent successfully to: {}", user.getEmail());
+        } catch (Exception e){
+            log.error("Failed to send password change confirmation email to: {}", user.getEmail(), e);
+        }
+    }
 }
