@@ -71,4 +71,24 @@ public class AddressController {
         }
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AddressResponse>> updateAddress(
+            @PathVariable Long id,@Valid @RequestBody AddressRequest request
+    ){
+        log.info("Updating address with id {}", id);
+        try {
+            AddressResponse addrress = addressService.updateAddress(id, request);
+            return ResponseEntity.ok(ApiResponse.success(
+               "Address updated successfully",
+                    addrress
+            ));
+        }catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(
+                    e.getMessage(),
+                    null
+            ));
+        }
+    }
+
 }
