@@ -1,10 +1,7 @@
 package com.safari_store.ecommerce.users.controllers;
 
 
-import com.safari_store.ecommerce.users.dtos.request.LoginRequest;
-import com.safari_store.ecommerce.users.dtos.request.LogoutRequest;
-import com.safari_store.ecommerce.users.dtos.request.RegisterRequest;
-import com.safari_store.ecommerce.users.dtos.request.VerifyOTPRequest;
+import com.safari_store.ecommerce.users.dtos.request.*;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
 import com.safari_store.ecommerce.users.service.AuthService;
@@ -61,5 +58,17 @@ public class AuthController {
         ApiResponse<?> response = authService.logout(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<ApiResponse<AuthResponse.AuthData>> refreshToken(
+            @Valid @RequestBody TokenRefreshRequest request
+            ){
+        log.info("Token refresh requst received");
+        ApiResponse<AuthResponse.AuthData> response = authService.refreshToken(request);
+
+        HttpStatus status = "success".equals(response.getStatus()) ?
+                HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(response);
     }
 }
