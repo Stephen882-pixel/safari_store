@@ -1,8 +1,10 @@
 package com.safari_store.ecommerce.users.controllers;
 
 
+import com.safari_store.ecommerce.users.dtos.request.LoginRequest;
 import com.safari_store.ecommerce.users.dtos.request.RegisterRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
+import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
 import com.safari_store.ecommerce.users.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +34,13 @@ public class AuthController {
     }
 
 
+    public ResponseEntity<ApiResponse<AuthResponse.AuthData>> login(@Valid @RequestBody LoginRequest request){
+        log.info("Login request from email: {}",request.getEmail());
+        ApiResponse<AuthResponse.AuthData> response = authService.login(request);
+
+        HttpStatus status = "success".equals(response.getStatus()) ?
+                HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(response);
+    }
 }
