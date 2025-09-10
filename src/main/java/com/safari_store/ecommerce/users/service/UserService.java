@@ -49,8 +49,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public PaginatedUsersResponse getAllUsers(int page, int size){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("dateJoined").descending());
-        Page<User> userPage = userRepository.findAll(pageable);
+        Pageable pageable = (Pageable) PageRequest.of(page, size, Sort.by("dateJoined").descending());
+        Page<User> userPage = userRepository.findAll((org.springframework.data.domain.Pageable) pageable);
 
         List<UserSummaryResponse> users = userPage.getContent().stream()
                 .map(this::mapToUserSummaryResponse)
@@ -116,7 +116,7 @@ public class UserService {
     }
 
     private UserResponse mapToUserResponse(User user) {
-        List<Address> addresses = user.getAddresses() != null ?
+        List<AddressResponse> addresses = user.getAddresses() != null ?
                 user.getAddresses().stream()
                         .map(this::mapToAddressResponse)
                         .collect(Collectors.toList()) : List.of();
@@ -128,6 +128,7 @@ public class UserService {
                 .gender(user.getGender())
                 .profileImage(user.getProfileImageUrl())
                 .build();
+
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -135,31 +136,32 @@ public class UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .dateJoined(user.getDateJoined())
-                .profile(profile)
+                //rofile(profile)
                 .userAddresses(addresses)
                 .build();
     }
 
-    private Object mapToAddressResponse(Address address) {
+    private AddressResponse mapToAddressResponse(Address address) {
         return AddressResponse.builder()
                 .id(address.getId())
                 .addressType(address.getAddressType())
                 .country(address.getCountry())
                 .county(address.getCounty())
                 .constituency(address.getConstituency())
+                .town(address.getTown())
                 .estate(address.getEstate())
                 .street(address.getStreet())
                 .landmark(address.getLandmark())
                 .postalCode(address.getPostalCode())
-                .createdAt(address.getCreatedDate())
+               //createdAt(address.getCreatedAt())
                 .updatedAt(address.getUpdatedAt())
                 .build();
     }
 
-    private String buildPageUrl(int page, int size){
+    private String buildPageUrl(int page, int size) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
-                .replaceQueryParam("page",page)
-                .replaceQueryParam("size",size)
+                .replaceQueryParam("page", page)
+                .replaceQueryParam("size", size)
                 .toUriString();
     }
     private UserSummaryResponse mapToUserSummaryResponse(User user) {
@@ -172,6 +174,7 @@ public class UserService {
                 .profileImage(user.getProfileImageUrl())
                 .build();
     }
+
 
     private void updateUserAddresses(User user, List<AddressUpdateRequest> addressRequests) {
         for (AddressUpdateRequest addressRequest : addressRequests) {

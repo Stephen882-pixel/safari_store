@@ -5,7 +5,6 @@ import com.safari_store.ecommerce.users.dtos.request.*;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
 import com.safari_store.ecommerce.users.models.OTP;
-import com.safari_store.ecommerce.users.models.PasswordResetRequest;
 import com.safari_store.ecommerce.users.repository.OTPRepository;
 import com.safari_store.ecommerce.users.repository.UserRepository;
 import com.safari_store.ecommerce.users.security.JwtUtil;
@@ -68,7 +67,7 @@ public class AuthService {
             otp.setOtpcode(otpCode);
             otpRepository.save(otp);
 
-            emailService.sendOTPEmail(savedUser,otpCode);
+            emailService.sendOTPMail(savedUser,otpCode);
 
             return ApiResponse.success(
                     "Account created successfully. Please check your email for OTP Verification code.",
@@ -87,7 +86,7 @@ public class AuthService {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
             if (userOpt.isPresent()) {
-                return ApiResponse.error("Invalid credentials",null)
+                return ApiResponse.error("Invalid credentials",null);
             }
             User user = userOpt.get();
 
@@ -121,7 +120,7 @@ public class AuthService {
                     "Account disabled"
             );
         } catch (BadCredentialsException e){
-            return ApiResponse.error("Invalid credentials",null)
+            return ApiResponse.error("Invalid credentials",null);
         } catch (AuthenticationException e){
             return ApiResponse.error(
                     "Authentication failed: " + e.getMessage(),null
@@ -163,7 +162,7 @@ public class AuthService {
             }
             if (!request.getOtpCode().equals(otp.getOtpcode())){
                 return ApiResponse.error(
-                        "Invalide OTP",
+                        "Invalid OTP",
                         null
                 );
             }
@@ -176,7 +175,7 @@ public class AuthService {
                 userRepository.save(user);
 
                 return ApiResponse.success(
-                        "Email verified succeessfully. You can now login",
+                        "Email verified successfully. You can now login",
                         null
                 );
             } else {
@@ -257,7 +256,7 @@ public class AuthService {
             otpRepository.delete(otp);
 
             return ApiResponse.success(
-                    "Password reset successfullly",
+                    "Password reset successfully",
                     null
             );
         } catch (Exception e){
@@ -372,7 +371,7 @@ public class AuthService {
                 );
             }
             return ApiResponse.success(
-                    "Logout successfull",
+                    "Logout successfully",
                     null
             );
         } catch (Exception e){

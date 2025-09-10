@@ -1,5 +1,6 @@
 package com.safari_store.ecommerce.users.models;
 
+import com.safari_store.ecommerce.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

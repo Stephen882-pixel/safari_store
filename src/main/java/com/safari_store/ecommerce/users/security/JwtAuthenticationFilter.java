@@ -2,6 +2,7 @@ package com.safari_store.ecommerce.users.security;
 
 
 import ch.qos.logback.core.util.StringUtil;
+import com.safari_store.ecommerce.users.service.CustomUserDetailsService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
