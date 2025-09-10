@@ -76,4 +76,9 @@ public class UserController {
         }
     }
 
+    public ResponseEntity<Void> deleteAccount(){
+        log.info("Deleting user account");
+        userService.deleteAccount();
+        return ResponseEntity.noContent().build();
+    }
 }
