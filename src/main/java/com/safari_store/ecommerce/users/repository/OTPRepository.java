@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.repository;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.models.OTP;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.users.service;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.Enum.UserRole;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.*;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
@@ -53,6 +54,7 @@ public class AuthService {
             User user = new User();
             user.setUsername(request.getUsername().toLowerCase());
             user.setEmail(request.getEmail());
+            user.setRole(UserRole.USER);
             user.setFirstName(request.getFirstname());
             user.setLastName(request.getLastname());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -81,6 +83,7 @@ public class AuthService {
             );
         }
     }
+
     @Transactional
     public ApiResponse<AuthResponse.AuthData> login(LoginRequest request) {
         try{
