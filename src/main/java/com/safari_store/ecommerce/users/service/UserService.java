@@ -31,12 +31,19 @@ public class UserService {
     private final AddressRepository addressRepository;
 
     public User getCurrentUser(){
+        log.info("=== SERVICE: getCurrentUser called ===");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null || !authentication.isAuthenticated()) {
+        log.info("Authentication object: {}", authentication);
+        log.info("Is Authenticated: {}", authentication != null ? authentication.isAuthenticated() : "null");
+        log.info("Authentication name: {}", authentication != null ? authentication.getName() : "null");
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("No authenticated user found. Authentication: {}", authentication);
             throw new RuntimeException("No authenticated user found");
         }
 
         String username = authentication.getName();
+        log.info("Extracted username: {}", username);
         return userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() ->  new RuntimeException("Current user is not found: " + username));
     }

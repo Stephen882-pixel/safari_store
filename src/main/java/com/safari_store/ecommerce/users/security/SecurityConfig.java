@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/register").permitAll()
-                        .requestMatchers("api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/auth/logout").permitAll()
                         .requestMatchers("/api/v1/auth/refresh").permitAll()
                         .requestMatchers("/api/v1/auth/password-reset").permitAll()
@@ -69,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/password-confirm").permitAll()
                         .requestMatchers("/api/v1/auth/verify-otp").permitAll()
 
-                        .requestMatchers("v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
 

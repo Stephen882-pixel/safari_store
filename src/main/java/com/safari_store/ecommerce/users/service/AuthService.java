@@ -64,7 +64,7 @@ public class AuthService {
             String otpCode = generateOTP();
             OTP otp = new OTP();
             otp.setUser(savedUser);
-            otp.setOtpcode(otpCode);
+            otp.setOtpCode(otpCode);
             otpRepository.save(otp);
 
             emailService.sendOTPMail(savedUser,otpCode);
@@ -85,7 +85,7 @@ public class AuthService {
     public ApiResponse<AuthResponse.AuthData> login(LoginRequest request) {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if (userOpt.isPresent()) {
+            if (userOpt.isEmpty()) {
                 return ApiResponse.error("Invalid credentials",null);
             }
             User user = userOpt.get();
@@ -137,7 +137,7 @@ public class AuthService {
     public ApiResponse<?> verifyOTP(VerifyOTPRequest request) {
         try {
             Optional<User>  userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if(userOpt.isPresent()){
+            if(userOpt.isEmpty()){
                 return ApiResponse.error(
                         "User not found",
                         null
@@ -160,7 +160,7 @@ public class AuthService {
                         null
                 );
             }
-            if (!request.getOtpCode().equals(otp.getOtpcode())){
+            if (!request.getOtpCode().equals(otp.getOtpCode())){
                 return ApiResponse.error(
                         "Invalid OTP",
                         null
@@ -209,7 +209,7 @@ public class AuthService {
             String otpCode = generateOTP();
             OTP otp = new OTP();
             otp.setUser(user);
-            otp.setOtpcode(otpCode);
+            otp.setOtpCode(otpCode);
             otpRepository.save(otp);
 
             emailService.sendPasswordResetOTP(user,otpCode);

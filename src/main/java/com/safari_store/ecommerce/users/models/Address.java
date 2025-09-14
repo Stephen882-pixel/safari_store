@@ -48,7 +48,7 @@ public class Address {
     private String postalCode;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

@@ -47,12 +47,10 @@ public class JwtUtil {
 
     public String createToken(Map<String, Object> claims,String subject,Long expiration) {
         return Jwts.builder()
-                .claims()
-                .add(claims)
-                .subject(subject)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .and()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -72,11 +70,11 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         try {
-            return Jwts.parser()
-                    .verifyWith(key)
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException e){
             log.warn("JWT token is expired: {}", e.getMessage());
             throw e;

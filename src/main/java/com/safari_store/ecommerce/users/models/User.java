@@ -1,4 +1,4 @@
-package com.safari_store.ecommerce.users;
+package com.safari_store.ecommerce.users.models;
 
 import com.safari_store.ecommerce.users.models.Address;
 import com.safari_store.ecommerce.users.models.OTP;

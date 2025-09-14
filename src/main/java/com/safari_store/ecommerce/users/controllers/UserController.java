@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +29,12 @@ public class UserController {
     private final AddressService addressService;
 
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfile(){
-        log.info("Getting user profile");
+        log.info("===CONTROLLER: Getting user profile ===");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Controller - Authentication object: {}", auth);
+        log.info("Controller - Is Authenticated: {}",auth != null ? auth.isAuthenticated() : "null");
         UserResponse userResponse = userService.getUserProfile();
 
         return ResponseEntity.ok(ApiResponse.success(

@@ -27,7 +27,7 @@ public class OTP {
     private User user;
 
     @Column(nullable = false,length = 6)
-    private String otpcode;
+    private String otpCode;
 
     @CreatedDate
     private LocalDateTime createdAt;

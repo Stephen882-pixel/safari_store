@@ -134,7 +134,7 @@ public class AddressService {
                 .town(address.getTown())
                 .street(address.getStreet())
                 .postalCode(address.getPostalCode())
-                .createdAt(address.getCreatedDate())
+                .createdAt(address.getCreatedAt())
                 .updatedAt(address.getUpdatedAt())
                 .build();
     }
