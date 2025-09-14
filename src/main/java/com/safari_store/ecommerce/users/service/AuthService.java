@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -199,7 +200,7 @@ public class AuthService {
     public ApiResponse<?> requestPasswordReset(PasswordRequestReset request) {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if (userOpt.isPresent()) {
+            if (userOpt.isEmpty()) {
                 return ApiResponse.error(
                         "User with this email does not exist",
                         null
@@ -239,14 +240,14 @@ public class AuthService {
             }
             User user = userOpt.get();
 
-            Optional<OTP> otpOpt = otpRepository.findByUserAndIsVerifiedFalseOrderByCreatedAtDesc(user);
-            if (otpOpt.isEmpty()){
+            List<OTP> validOtps = otpRepository.findAllValidVerifiedByUser(user,LocalDateTime.now());
+            if (validOtps.isEmpty()){
                 return ApiResponse.error(
                         "No valid verified OTP found",
                         null
                 );
             }
-            OTP otp = otpOpt.get();
+            OTP otp = validOtps.get(0);
             if (!otp.isVerified() || otp.isExpired()){
                 return ApiResponse.error(
                         "Invalid or expired session",

@@ -75,8 +75,8 @@ public class User implements UserDetails {
 
     private LocalDate dateOfBirth;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+//    @Enumerated(EnumType.STRING)
+//    private Gender gender;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

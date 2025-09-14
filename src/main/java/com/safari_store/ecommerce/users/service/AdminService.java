@@ -21,7 +21,8 @@ public class AdminService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
         if(user.getRole() == UserRole.ADMIN){
-            throw new IllegalStateException("User is already an admin");
+            log.info("User {} is already an admin", username);
+            return;
         }
 
         user.setRole(UserRole.ADMIN);
@@ -36,7 +37,8 @@ public class AdminService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
         if (user.getRole() != UserRole.ADMIN){
-            throw new IllegalStateException("User is not an admin");
+            log.info("User {} is not an admin", username);
+            return;
         }
         user.setRole(UserRole.USER);
         userRepository.save(user);

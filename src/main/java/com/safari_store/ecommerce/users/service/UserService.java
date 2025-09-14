@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,7 +78,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserResponse updateUserProfile(UserProfileUpdateRequest request){
         User user = getCurrentUser();
 

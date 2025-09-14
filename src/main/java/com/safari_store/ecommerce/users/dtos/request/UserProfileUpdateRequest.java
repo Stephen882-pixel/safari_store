@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.dtos.request;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -30,12 +30,12 @@ public class UserProfileUpdateRequest {
     private String phoneNumber;
 
     @Size(max = 20, message = "National ID must not exceed 20 characters")
-    private String nationalId;
+        private String nationalId;
 
     @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
-    private User.Gender gender;
+    //private User.Gender gender;
 
     private List<AddressUpdateRequest> addresses;
 }

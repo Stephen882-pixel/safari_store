@@ -14,7 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface OTPRepository  extends JpaRepository<OTP, Long> {
-    Optional<OTP> findByUserAndIsVerifiedFalseOrderByCreatedAtDesc(User user);
+
+    @Query("SELECT o FROM OTP o WHERE o.user = :user AND o.isVerified = true AND o.expiresAt > :currentTime ORDER BY o.createdAt DESC")
+    List<OTP> findAllValidVerifiedByUser(@Param("user") User user, @Param("currentTime") LocalDateTime currentTime);
 
     List<OTP> findByUserAndIsVerifiedFalse(User user);
 

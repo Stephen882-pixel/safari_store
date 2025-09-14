@@ -6,10 +6,7 @@ import com.safari_store.ecommerce.users.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -28,7 +25,7 @@ public class AdminController {
         ));
     }
 
-    @PostMapping("/demote/{username}")
+    @PatchMapping("/demote/{username}")
     public ResponseEntity<ApiResponse<String>> demoteToUser(@PathVariable String username){
         adminService.demoteToUser(username);
         return ResponseEntity.ok(ApiResponse.success(

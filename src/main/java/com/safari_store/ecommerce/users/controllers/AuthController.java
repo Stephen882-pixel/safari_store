@@ -1,7 +1,7 @@
 package com.safari_store.ecommerce.users.controllers;
 
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.*;
 //import com.safari_store.ecommerce.users.dtos.request.PasswordResetRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
