@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.service;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.AddressRequest;
 import com.safari_store.ecommerce.users.dtos.response.AddressResponse;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;

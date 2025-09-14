@@ -29,7 +29,7 @@ public class UserController {
     private final AddressService addressService;
 
     @GetMapping("/profile")
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfile(){
         log.info("===CONTROLLER: Getting user profile ===");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

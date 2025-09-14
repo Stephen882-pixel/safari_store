@@ -115,7 +115,7 @@ public class User implements UserDetails {
         return isActive;
     }
 
-    public enum Gender {
-        MALE, FEMALE, OTHER
-    }
+//    public enum Gender {
+//        MALE, FEMALE, OTHER
+//    }
 }
