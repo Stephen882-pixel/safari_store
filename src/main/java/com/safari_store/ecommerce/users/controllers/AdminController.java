@@ -20,7 +20,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/promote/{username}")
-    public ResponseEntity<ApiResponse<String>> promote(@PathVariable String username){
+    public ResponseEntity<ApiResponse<String>> promoteToUser(@PathVariable String username){
         adminService.promoteToAdmin(username);
         return ResponseEntity.ok(ApiResponse.success(
            "User promoted to admin successfully",
@@ -28,5 +28,12 @@ public class AdminController {
         ));
     }
 
-
+    @PostMapping("/demote/{username}")
+    public ResponseEntity<ApiResponse<String>> demoteToUser(@PathVariable String username){
+        adminService.demoteToUser(username);
+        return ResponseEntity.ok(ApiResponse.success(
+           "Admin demoted to user successfully",
+                "User " + username + " is now a USER"
+        ));
+    }
 }
