@@ -1,5 +1,6 @@
 package com.safari_store.ecommerce.users.models;
 
+import com.safari_store.ecommerce.users.Enum.UserRole;
 import com.safari_store.ecommerce.users.models.Address;
 import com.safari_store.ecommerce.users.models.OTP;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -40,6 +42,8 @@ public class User implements UserDetails {
     @Email(message = "Please provide a valid email")
     @NotBlank(message = "Email is required")
     private String email;
+
+    private UserRole role = UserRole.USER;  // default to USER
 
     @NotBlank(message = "First name is required")
     @Size(max = 50)
@@ -83,7 +87,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
