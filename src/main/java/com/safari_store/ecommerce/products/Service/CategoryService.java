@@ -1,7 +1,10 @@
 package com.safari_store.ecommerce.products.Service;
 
 import com.safari_store.ecommerce.products.DTOS.CategoryDTO;
+import com.safari_store.ecommerce.products.models.Category;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.OpenApiResourceNotFoundException;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public  CategoryDTO getCategoryById(Long id){
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new OpenApiResourceNotFoundException("Category not found with id: " + id));
+        return convertToDTO(category);
+    }
 
 
 }
