@@ -11,6 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Nodes.collect;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,4 +39,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    public List<ProductDTO> getFeaturedProducts() {
+        return productRepository.findByFeaturedTrueAndActiveTrue()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 }
