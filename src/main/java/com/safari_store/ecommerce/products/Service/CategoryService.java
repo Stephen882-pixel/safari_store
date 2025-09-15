@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.products.Service;
 
 import com.safari_store.ecommerce.products.DTOS.CategoryDTO;
+import com.safari_store.ecommerce.products.Exceptions.ResourceNotFoundException;
 import com.safari_store.ecommerce.products.models.Category;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.OpenApiResourceNotFoundException;

@@ -3,6 +3,7 @@ package com.safari_store.ecommerce.products.DTOS;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductDTO {
     private Long id;
 
@@ -31,7 +33,7 @@ public class ProductDTO {
     private Integer stockQuantity;
 
     private String imageUrl;
-    private List<String> additionalImages;
+    private List<String> additionalImagesUrls;
     private Boolean active;
     private Boolean featured;
 

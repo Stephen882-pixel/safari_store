@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.products.Service;
 
 import com.safari_store.ecommerce.products.DTOS.ProductDTO;
+import com.safari_store.ecommerce.products.Exceptions.ResourceNotFoundException;
 import com.safari_store.ecommerce.products.models.Category;
 import com.safari_store.ecommerce.products.models.Product;
 import com.safari_store.ecommerce.products.models.Repository.CategoryRepository;
@@ -13,10 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Nodes.collect;
+
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +85,7 @@ public class ProductService {
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setStockQuantity(productDTO.getStockQuantity());
         existingProduct.setImageUrl(productDTO.getImageUrl());
-        existingProduct.setAdditionalImages(productDTO.getAdditionalImages());
+        existingProduct.setAdditionalImages(productDTO.getAdditionalImagesUrls());
         existingProduct.setFeatured(productDTO.getFeatured());
         existingProduct.setActive(productDTO.getActive());
         existingProduct.setCategory(category);
@@ -101,22 +103,32 @@ public class ProductService {
     }
 
     private ProductDTO convertToDTO(Product product) {
-        ProductDTO dto = new ProductDTO();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setStockQuantity(product.getStockQuantity());
-        dto.setImageUrl(product.getImageUrl());
-        dto.setAdditionalImages(product.getAdditionalImages());
-        dto.setFeatured(product.isFeatured());
-        dto.setActive(product.isActive());
-        dto.setCategoryId(product.getCategory().getId());
-        dto.setCategory(categoryService.convertToDTO(product.getCategory()));
-        dto.setTags(product.getTags());
-        dto.setCreatedAt(product.getCreatedAt());
-        dto.setUpdatedAt(product.getUpdatedAt());
-        return dto;
+        return ProductDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .imageUrl(product.getImageUrl())
+                // ✅ map entity list -> simple String list
+                .additionalImagesUrls(
+                        product.getAdditionalImages() == null
+                                ? List.of()
+                                : product.getAdditionalImages()
+                                .stream()
+                                //.map(Image::getUrl)
+                                .toList()
+                )
+                .featured(product.isFeatured())
+                .active(product.isActive())
+                .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
+                .category(product.getCategory() != null
+                        ? categoryService.convertToDTO(product.getCategory())
+                        : null)
+                .tags(product.getTags() != null ? new ArrayList<>(product.getTags()) : List.of())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
     }
 
     private Product convertToEntity(ProductDTO dto) {
@@ -126,7 +138,7 @@ public class ProductService {
         product.setPrice(dto.getPrice());
         product.setStockQuantity(dto.getStockQuantity());
         product.setImageUrl(dto.getImageUrl());
-        product.setAdditionalImages(dto.getAdditionalImages());
+        product.setAdditionalImages(dto.getAdditionalImagesUrls());
         product.setFeatured(dto.getFeatured());
         product.setActive(dto.getActive() != null ? dto.getActive(): true);
         product.setFeatured(dto.getFeatured() != null ? dto.getFeatured(): false);
