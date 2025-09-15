@@ -119,4 +119,18 @@ public class ProductService {
         return dto;
     }
 
+    private Product convertToEntity(ProductDTO dto) {
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setStockQuantity(dto.getStockQuantity());
+        product.setImageUrl(dto.getImageUrl());
+        product.setAdditionalImages(dto.getAdditionalImages());
+        product.setFeatured(dto.getFeatured());
+        product.setActive(dto.getActive() != null ? dto.getActive(): true);
+        product.setFeatured(dto.getFeatured() != null ? dto.getFeatured(): false);
+        product.setTags(dto.getTags());
+        return product;
+    }
 }
