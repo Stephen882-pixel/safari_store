@@ -38,7 +38,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public  CategoryDTO getCategoryById(Long id){
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new OpenApiResourceNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         return convertToDTO(category);
     }
 
@@ -68,6 +68,14 @@ public class CategoryService {
 
         Category updatedCategory = categoryRepository.save(existingCategory);
         return convertToDTO(updatedCategory);
+    }
+
+    public void deleteCategory(Long id){
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
+        category.setActive(false);
+        categoryRepository.save(category);
     }
 
 }
