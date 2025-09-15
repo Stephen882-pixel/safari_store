@@ -99,4 +99,24 @@ public class ProductService {
         product.setActive(false);
         productRepository.save(product);
     }
+
+    private ProductDTO convertToDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStockQuantity(product.getStockQuantity());
+        dto.setImageUrl(product.getImageUrl());
+        dto.setAdditionalImages(product.getAdditionalImages());
+        dto.setFeatured(product.isFeatured());
+        dto.setActive(product.isActive());
+        dto.setCategoryId(product.getCategory().getId());
+        dto.setCategory(categoryService.convertToDTO(product.getCategory()));
+        dto.setTags(product.getTags());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
+        return dto;
+    }
+
 }

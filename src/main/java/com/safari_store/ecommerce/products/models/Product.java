@@ -24,7 +24,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long field;
+    private Long id;
 
     @NotBlank(message = "product name is required")
     @Size(min = 2,max = 200, message = "product name must be between 2 and 200 characters")

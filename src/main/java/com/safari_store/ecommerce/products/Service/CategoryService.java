@@ -78,7 +78,7 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    private CategoryDTO convertToDTO(Category category){
+    public CategoryDTO convertToDTO(Category category){
         CategoryDTO dto = new CategoryDTO();
         dto.setId(category.getId());
         dto.setName(category.getName());
