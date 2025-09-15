@@ -42,5 +42,16 @@ public class CategoryService {
         return convertToDTO(category);
     }
 
+    public CategoryDTO createCategory(CategoryDTO categoryDTO){
+        if (categoryRepository.existsByName(categoryDTO.getName())) {
+            throw new IllegalArgumentException("Category with name " + categoryDTO.getName() + " already exists");
+        }
+
+        Category category = convertToEntity(categoryDTO);
+        Category savedCategory = categoryRepository.save(category);
+        return convertToDTO(savedCategory);
+    }
+
+
 
 }
