@@ -2,10 +2,13 @@ package com.safari_store.ecommerce.products.Controllers;
 
 import com.safari_store.ecommerce.products.DTOS.ProductDTO;
 import com.safari_store.ecommerce.products.Service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -52,5 +55,12 @@ public class ProductController {
             ){
         Page<ProductDTO> products = productService.filterProducts(categoryId, minPrice, maxPrice, inStock, pageable);
         return ResponseEntity.ok(products);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO){
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 }
