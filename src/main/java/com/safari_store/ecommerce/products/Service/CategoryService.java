@@ -52,6 +52,22 @@ public class CategoryService {
         return convertToDTO(savedCategory);
     }
 
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO){
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
 
+        if (!existingCategory.getName().equals(categoryDTO.getName()) &&
+            categoryRepository.existsByName(categoryDTO.getName())) {
+            throw new IllegalArgumentException("Category with name " + categoryDTO.getName() + " already exists");
+        }
+
+        existingCategory.setName(categoryDTO.getName());
+        existingCategory.setDescription(categoryDTO.getDescription());
+        existingCategory.setImageUrl(categoryDTO.getImageUrl());
+        existingCategory.setActive(categoryDTO.getActive());
+
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        return convertToDTO(updatedCategory);
+    }
 
 }
