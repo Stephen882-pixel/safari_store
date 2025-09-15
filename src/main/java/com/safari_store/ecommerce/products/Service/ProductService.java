@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class ProductService {
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        return convertToDTO(product)
+        return convertToDTO(product);
     }
 
     @Transactional(readOnly = true)
@@ -49,6 +50,12 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductDTO>  searchProducts(String keyword,Pageable pageable){
         return productRepository.searchProducts(keyword,pageable)
+                .map(this::convertToDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> filterProducts(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, Boolean inStock, Pageable pageable){
+        return productRepository.filterProducts(categoryId,minPrice,maxPrice,inStock,pageable)
                 .map(this::convertToDTO);
     }
 
