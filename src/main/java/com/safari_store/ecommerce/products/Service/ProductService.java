@@ -93,5 +93,10 @@ public class ProductService {
         return convertToDTO(updatedProduct);
     }
 
-
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("product not found with id: " + id));
+        product.setActive(false);
+        productRepository.save(product);
+    }
 }
