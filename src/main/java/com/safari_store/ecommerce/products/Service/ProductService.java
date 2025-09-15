@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.products.Service;
 
 import com.safari_store.ecommerce.products.DTOS.ProductDTO;
+import com.safari_store.ecommerce.products.models.Category;
 import com.safari_store.ecommerce.products.models.Product;
 import com.safari_store.ecommerce.products.models.Repository.CategoryRepository;
 import com.safari_store.ecommerce.products.Repository.ProductRepository;
@@ -59,4 +60,14 @@ public class ProductService {
                 .map(this::convertToDTO);
     }
 
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Category category = categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + productDTO.getCategoryId()));
+
+        Product product = convertToEntity(productDTO);
+        product.setCategory(category);
+
+        Product savedProduct = productRepository.save(product);
+        return convertToDTO(savedProduct);
+    }
 }
