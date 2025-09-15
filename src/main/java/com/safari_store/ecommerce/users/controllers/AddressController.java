@@ -45,7 +45,7 @@ public class AddressController {
         try {
             AddressResponse addrress = addressService.createAddress(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(
-               "Adderess create successfully",
+               "Adderess created successfully",
                addrress
             ));
         } catch (RuntimeException e) {
