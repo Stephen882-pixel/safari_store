@@ -90,6 +90,13 @@ public class CategoryService {
         return dto;
     }
 
-
+    private Category convertToEntity(CategoryDTO dto){
+        Category category = new Category();
+        category.setName(dto.getName());
+        category.setDescription(dto.getDescription());
+        category.setImageUrl(dto.getImageUrl());
+        category.setActive(dto.getActive() != null ? dto.getActive() : true);
+        return category;
+    }
 
 }
