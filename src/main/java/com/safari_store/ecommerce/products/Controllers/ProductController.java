@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
@@ -28,5 +30,11 @@ public class ProductController {
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id){
         ProductDTO productDTO = productService.getProductById(id);
         return ResponseEntity.ok(productDTO);
+    }
+
+    @GetMapping("/featured")
+    public ResponseEntity<List<ProductDTO>> getFeaturedProducts(){
+        List<ProductDTO> featuredProducts = productService.getFeaturedProducts();
+        return ResponseEntity.ok(featuredProducts);
     }
 }
