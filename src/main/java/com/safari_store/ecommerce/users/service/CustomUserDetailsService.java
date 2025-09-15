@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.service;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

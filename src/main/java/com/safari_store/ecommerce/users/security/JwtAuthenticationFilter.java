@@ -34,22 +34,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        log.info("Processing request: {} {}",request.getMethod(),request.getRequestURI());
         try{
             String jwt = getJwtFromRequest(request);
+            log.info("Extracted jwt: {}",jwt != null ? "Present" : "Absent");
+
             if (StringUtils.hasText(jwt) && jwtUtil.validateToken(jwt)) {
+                log.info("JWT is valid");
                 String username = jwtUtil.extractUsername(jwt);
+                log.info("Extracted username from JWT: {}", username);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    log.info("Loaded user details: {}", userDetails.getUsername());
 
-                    if(jwtUtil.validateToken(jwt,userDetails)){
+                    if(jwtUtil.validateToken(jwt)){
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails,null,userDetails.getAuthorities()
                         );
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                        log.info("Authentication set in SecurityContext");
+                        log.info("User Authorities: {}",userDetails.getAuthorities());
+                    } else {
+                        log.warn("Token validation failed on second check");
                     }
+                } else {
+                    log.warn("Username is null or authentication already exists");
                 }
+            } else {
+                log.warn("JWT is invalid or absent");
             }
         } catch (JwtException e){
             log.warn("JWT token validation failed: {}", e.getMessage());

@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.models;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +48,7 @@ public class Address {
     private String postalCode;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.repository;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.models.OTP;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,7 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface OTPRepository  extends JpaRepository<OTP, Long> {
-    Optional<OTP> findByUserAndIsVerifiedFalseOrderByCreatedAtDesc(User user);
+
+    @Query("SELECT o FROM OTP o WHERE o.user = :user AND o.isVerified = true AND o.expiresAt > :currentTime ORDER BY o.createdAt DESC")
+    List<OTP> findAllValidVerifiedByUser(@Param("user") User user, @Param("currentTime") LocalDateTime currentTime);
 
     List<OTP> findByUserAndIsVerifiedFalse(User user);
 

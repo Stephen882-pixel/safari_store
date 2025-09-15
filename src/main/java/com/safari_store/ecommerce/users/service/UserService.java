@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.users.service;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.Enum.UserRole;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.AddressUpdateRequest;
 import com.safari_store.ecommerce.users.dtos.request.UserProfileUpdateRequest;
 import com.safari_store.ecommerce.users.dtos.response.*;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,12 +32,19 @@ public class UserService {
     private final AddressRepository addressRepository;
 
     public User getCurrentUser(){
+        log.info("=== SERVICE: getCurrentUser called ===");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null || !authentication.isAuthenticated()) {
+        log.info("Authentication object: {}", authentication);
+        log.info("Is Authenticated: {}", authentication != null ? authentication.isAuthenticated() : "null");
+        log.info("Authentication name: {}", authentication != null ? authentication.getName() : "null");
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("No authenticated user found. Authentication: {}", authentication);
             throw new RuntimeException("No authenticated user found");
         }
 
         String username = authentication.getName();
+        log.info("Extracted username: {}", username);
         return userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() ->  new RuntimeException("Current user is not found: " + username));
     }
@@ -70,7 +78,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserResponse updateUserProfile(UserProfileUpdateRequest request){
         User user = getCurrentUser();
 
@@ -103,9 +111,9 @@ public class UserService {
         if (request.getDateOfBirth()!= null){
             user.setDateOfBirth(request.getDateOfBirth());
         }
-        if (request.getGender() != null){
-            user.setGender(request.getGender());
-        }
+//        if (request.getGender() != null){
+//            user.setGender(request.getGender());
+//        }
 
         if (request.getAddresses() != null && !request.getAddresses().isEmpty()){
             updateUserAddresses(user,request.getAddresses());
@@ -125,7 +133,7 @@ public class UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .nationalId(user.getNationalId())
                 .dateOfBirth(user.getDateOfBirth())
-                .gender(user.getGender())
+                //.gender(user.getGender())
                 .profileImage(user.getProfileImageUrl())
                 .build();
 
@@ -136,7 +144,7 @@ public class UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .dateJoined(user.getDateJoined())
-                //rofile(profile)
+                //profile(profile)
                 .userAddresses(addresses)
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.safari_store.ecommerce.users.service;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.Enum.UserRole;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.*;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
 import com.safari_store.ecommerce.users.dtos.response.AuthResponse;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -53,6 +55,7 @@ public class AuthService {
             User user = new User();
             user.setUsername(request.getUsername().toLowerCase());
             user.setEmail(request.getEmail());
+            user.setRole(UserRole.USER);
             user.setFirstName(request.getFirstname());
             user.setLastName(request.getLastname());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -64,7 +67,7 @@ public class AuthService {
             String otpCode = generateOTP();
             OTP otp = new OTP();
             otp.setUser(savedUser);
-            otp.setOtpcode(otpCode);
+            otp.setOtpCode(otpCode);
             otpRepository.save(otp);
 
             emailService.sendOTPMail(savedUser,otpCode);
@@ -81,11 +84,12 @@ public class AuthService {
             );
         }
     }
+
     @Transactional
     public ApiResponse<AuthResponse.AuthData> login(LoginRequest request) {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if (userOpt.isPresent()) {
+            if (userOpt.isEmpty()) {
                 return ApiResponse.error("Invalid credentials",null);
             }
             User user = userOpt.get();
@@ -137,7 +141,7 @@ public class AuthService {
     public ApiResponse<?> verifyOTP(VerifyOTPRequest request) {
         try {
             Optional<User>  userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if(userOpt.isPresent()){
+            if(userOpt.isEmpty()){
                 return ApiResponse.error(
                         "User not found",
                         null
@@ -160,7 +164,7 @@ public class AuthService {
                         null
                 );
             }
-            if (!request.getOtpCode().equals(otp.getOtpcode())){
+            if (!request.getOtpCode().equals(otp.getOtpCode())){
                 return ApiResponse.error(
                         "Invalid OTP",
                         null
@@ -196,7 +200,7 @@ public class AuthService {
     public ApiResponse<?> requestPasswordReset(PasswordRequestReset request) {
         try{
             Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
-            if (userOpt.isPresent()) {
+            if (userOpt.isEmpty()) {
                 return ApiResponse.error(
                         "User with this email does not exist",
                         null
@@ -209,7 +213,7 @@ public class AuthService {
             String otpCode = generateOTP();
             OTP otp = new OTP();
             otp.setUser(user);
-            otp.setOtpcode(otpCode);
+            otp.setOtpCode(otpCode);
             otpRepository.save(otp);
 
             emailService.sendPasswordResetOTP(user,otpCode);
@@ -236,14 +240,14 @@ public class AuthService {
             }
             User user = userOpt.get();
 
-            Optional<OTP> otpOpt = otpRepository.findByUserAndIsVerifiedFalseOrderByCreatedAtDesc(user);
-            if (otpOpt.isEmpty()){
+            List<OTP> validOtps = otpRepository.findAllValidVerifiedByUser(user,LocalDateTime.now());
+            if (validOtps.isEmpty()){
                 return ApiResponse.error(
                         "No valid verified OTP found",
                         null
                 );
             }
-            OTP otp = otpOpt.get();
+            OTP otp = validOtps.get(0);
             if (!otp.isVerified() || otp.isExpired()){
                 return ApiResponse.error(
                         "Invalid or expired session",

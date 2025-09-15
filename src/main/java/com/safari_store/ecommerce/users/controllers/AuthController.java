@@ -1,7 +1,7 @@
 package com.safari_store.ecommerce.users.controllers;
 
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import com.safari_store.ecommerce.users.dtos.request.*;
 //import com.safari_store.ecommerce.users.dtos.request.PasswordResetRequest;
 import com.safari_store.ecommerce.users.dtos.response.ApiResponse;
@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-
+    @PostMapping("/register")
     public ResponseEntity<ApiResponse<?>> register(@Valid @RequestBody RegisterRequest request){
         log.info("Registration requet for username: {}",request.getUsername());
         ApiResponse<?> response = authService.register(request);
@@ -36,7 +38,7 @@ public class AuthController {
         return ResponseEntity.status(status).body(response);
     }
 
-
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse.AuthData>> login(@Valid @RequestBody LoginRequest request){
         log.info("Login request from email: {}",request.getEmail());
         ApiResponse<AuthResponse.AuthData> response = authService.login(request);
@@ -47,6 +49,7 @@ public class AuthController {
         return ResponseEntity.status(status).body(response);
     }
 
+    @PostMapping("/verify-otp")
     public ResponseEntity<ApiResponse<?>> verifyOTP(@Valid @RequestBody VerifyOTPRequest request){
         log.info("OTP Verification request for email: {}",request.getEmail());
         ApiResponse<?> response = authService.verifyOTP(request);
@@ -57,6 +60,7 @@ public class AuthController {
         return ResponseEntity.status(status).body(response);
     }
 
+    @PostMapping("/logout")
     public ResponseEntity<ApiResponse<?>>  logout(@Valid @RequestBody LogoutRequest request){
         log.info("Log out request recieved");
         ApiResponse<?> response = authService.logout(request);
@@ -64,6 +68,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<AuthResponse.AuthData>> refreshToken(
             @Valid @RequestBody TokenRefreshRequest request
             ){
@@ -75,14 +80,16 @@ public class AuthController {
 
         return ResponseEntity.status(status).body(response);
     }
-    
+
+    @PostMapping("/password-reset")
     public ResponseEntity<ApiResponse<?>> requestPasswordReset(@Valid @RequestBody PasswordRequestReset  request){
         log.info("Password reset request for email : {}",request.getEmail());
         ApiResponse<?> response = authService.requestPasswordReset(request);
 
         return ResponseEntity.ok(response);
     }
-    
+
+    @PostMapping("/password-confirm")
     public ResponseEntity<ApiResponse<?>> resetPassword(@Valid @RequestBody ResetPasswordRequest request){
         log.info("Password reset confirmation for email: {}",request.getEmail());
         ApiResponse<?> response = authService.resetPassword(request);
@@ -92,6 +99,8 @@ public class AuthController {
         return ResponseEntity.status(status).body(response);
     }
 
+    @PostMapping("/change-password")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<?>> changePassword(@Valid @RequestBody ChangePasswordRequest request,
                                                          @Parameter(hidden = true) @AuthenticationPrincipal User currentUser){
         log.info("Password change request for user: {}",currentUser.getUsername());

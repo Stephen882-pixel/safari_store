@@ -1,6 +1,6 @@
 package com.safari_store.ecommerce.users.models;
 
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class OTP {
     private User user;
 
     @Column(nullable = false,length = 6)
-    private String otpcode;
+    private String otpCode;
 
     @CreatedDate
     private LocalDateTime createdAt;

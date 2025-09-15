@@ -1,7 +1,7 @@
 package com.safari_store.ecommerce.users.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.safari_store.ecommerce.users.User;
+import com.safari_store.ecommerce.users.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +18,6 @@ public class UserProfileResponse {
     private String phoneNumber;
     private String nationalId;
     private LocalDate dateOfBirth;
-    private User.Gender gender;
+    //private User.Gender gender;
     private String profileImage;
 }
