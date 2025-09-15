@@ -46,4 +46,10 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProductDTO>  searchProducts(String keyword,Pageable pageable){
+        return productRepository.searchProducts(keyword,pageable)
+                .map(this::convertToDTO);
+    }
+
 }
