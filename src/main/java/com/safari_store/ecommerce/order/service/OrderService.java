@@ -110,6 +110,10 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    public OrderDTO cancelOrder(Long userId,Long orderId,CancelOrderRequest request){
+
+    }
+
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
