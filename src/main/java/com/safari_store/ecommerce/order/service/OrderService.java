@@ -175,6 +175,13 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getOrderByStatus(OrderStatus status,Pageable pageable){
+        return orderRepository.findByStatusOrderByCreatedAtDesc(status, pageable)
+                .map(this::convertToDTO);
+    }
+
+
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
