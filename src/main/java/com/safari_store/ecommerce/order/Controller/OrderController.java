@@ -58,7 +58,7 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-//    private Long getUserIdFromAuthentication(Authentication authentication){
-//        return 1L;
-//    }
+    private Long getUserIdFromAuthentication(Authentication authentication){
+        return 1L;
+    }
 }

@@ -55,7 +55,7 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-//    private Long getUserIdFromAuthentication(Authentication authentication){
-//        return 1L;
-//    }
+    private Long getUserIdFromAuthentication(Authentication authentication){
+        return 1L;
+    }
 }

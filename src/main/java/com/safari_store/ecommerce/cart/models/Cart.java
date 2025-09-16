@@ -45,20 +45,20 @@ public class Cart {
 
     public void calculateTotals() {
         this.totalAmount = items.stream()
-                .map(CartItem::getSubTotal)
-                .reduce(BigDecimal.ZERO,BigDecimal::add);
+                .map(CartItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.totalItems = items.stream()
                 .mapToInt(CartItem::getQuantity)
                 .sum();
     }
 
-    public void addItem(CartItem item){
+    public void addItem(CartItem item) {
         items.add(item);
-        items.setCart(this);
+        item.setCart(this);
         calculateTotals();
     }
 
-    public void removeItem(CartItem item){
+    public void removeItem(CartItem item) {
         items.remove(item);
         calculateTotals();
     }
