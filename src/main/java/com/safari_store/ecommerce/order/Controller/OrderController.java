@@ -2,6 +2,7 @@ package com.safari_store.ecommerce.order.Controller;
 
 
 import com.safari_store.ecommerce.order.DTOS.OrderDTO;
+import com.safari_store.ecommerce.order.DTOS.Request.CancelOrderRequest;
 import com.safari_store.ecommerce.order.DTOS.Request.CreateOrderRequest;
 import com.safari_store.ecommerce.order.service.OrderService;
 import jakarta.validation.Valid;
@@ -40,6 +41,13 @@ public class OrderController {
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId, Authentication authentication){
         Long userId = getUserIdFromAuthentication(authentication);
         OrderDTO order = orderService.getOrderById(userId, orderId);
+        return ResponseEntity.ok(order);
+    }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderDTO> cancelOrder(@PathVariable Long orderId, @Valid @RequestBody CancelOrderRequest request, Authentication authentication){
+        Long userId = getUserIdFromAuthentication(authentication);
+        OrderDTO order = orderService.cancelOrder(userId, orderId, request);
         return ResponseEntity.ok(order);
     }
 }
