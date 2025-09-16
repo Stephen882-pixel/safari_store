@@ -7,6 +7,7 @@ import com.safari_store.ecommerce.order.DTOS.OrderDTO;
 import com.safari_store.ecommerce.order.DTOS.OrderItemDTO;
 import com.safari_store.ecommerce.order.DTOS.Request.CancelOrderRequest;
 import com.safari_store.ecommerce.order.DTOS.Request.CreateOrderRequest;
+import com.safari_store.ecommerce.order.DTOS.Request.UpdateOrderStatusRequest;
 import com.safari_store.ecommerce.order.OrderStatus;
 import com.safari_store.ecommerce.order.Repository.OrderItemRepository;
 import com.safari_store.ecommerce.order.Repository.OrderRepository;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,6 +148,30 @@ public class OrderService {
     public OrderDTO getOrderById(Long orderId){
         Order order = orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        return convertToDTO(order);
+    }
+
+    public OrderDTO updateOrderStatus(Long ordeId, UpdateOrderStatusRequest request){
+        Order order = orderRepository.findByIdWithItems(ordeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + ordeId));
+
+        OrderStatus previousStatus = order.getStatus();
+        order.setStatus(request.getStatus());
+        if(request.getTrackingNumber() != null){
+            order.setTrackingNumber(request.getTrackingNumber());
+        }
+        if(request.getEstimatedDelivery() != null){
+            order.setEstimatedDelivery(request.getEstimatedDelivery());
+        }
+        if(request.getNotes() != null){
+            order.setNotes(request.getNotes());
+        }
+
+        if(request.getStatus() == OrderStatus.DELIVERED && previousStatus != OrderStatus.DELIVERED){
+            order.setDeliveredAt(LocalDateTime.now());
+        }
+
+        order = orderRepository.save(order);
         return convertToDTO(order);
     }
 
