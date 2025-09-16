@@ -129,6 +129,14 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    @Transactional(readOnly = true)
+    public OrderDTO trackOrder(Long userId,Long orderId){
+        Order order = orderRepository.findByUserIdAndIdWithItems(userId, orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        return convertToDTO(order);
+    }
+
+
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
