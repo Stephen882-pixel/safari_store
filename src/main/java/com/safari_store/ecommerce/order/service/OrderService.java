@@ -5,6 +5,7 @@ import com.safari_store.ecommerce.cart.models.Cart;
 import com.safari_store.ecommerce.cart.models.CartItem;
 import com.safari_store.ecommerce.order.DTOS.OrderDTO;
 import com.safari_store.ecommerce.order.DTOS.OrderItemDTO;
+import com.safari_store.ecommerce.order.DTOS.Request.CancelOrderRequest;
 import com.safari_store.ecommerce.order.DTOS.Request.CreateOrderRequest;
 import com.safari_store.ecommerce.order.OrderStatus;
 import com.safari_store.ecommerce.order.Repository.OrderItemRepository;
@@ -110,8 +111,22 @@ public class OrderService {
         return convertToDTO(order);
     }
 
-    public OrderDTO cancelOrder(Long userId,Long orderId,CancelOrderRequest request){
+    public OrderDTO cancelOrder(Long userId, Long orderId, CancelOrderRequest request){
+        Order order = orderRepository.findByUserIdAndIdWithItems(userId, orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        if(!order.canBeCancelled()){
+            throw new IllegalArgumentException("Order can not be cancelled in the current status: " + order.getStatus());
+        }
 
+        order.cancel(request.getReason());
+        for(OrderItem orderItem : order.getItems()){
+            Product product = orderItem.getProduct();
+            product.setStockQuantity(product.getStockQuantity() + orderItem.getQuantity());
+            productRepository.save(product);
+        }
+
+        order = orderRepository.save(order);
+        return convertToDTO(order);
     }
 
     private OrderDTO convertToDTO(Order order){
