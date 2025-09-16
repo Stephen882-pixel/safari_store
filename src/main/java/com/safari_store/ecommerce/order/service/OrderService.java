@@ -136,6 +136,12 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getAllOrders(Pageable pageable){
+        return orderRepository.findAll(pageable)
+                .map(this::convertToDTO);
+    }
+
 
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
