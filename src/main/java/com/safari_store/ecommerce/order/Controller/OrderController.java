@@ -50,4 +50,12 @@ public class OrderController {
         OrderDTO order = orderService.cancelOrder(userId, orderId, request);
         return ResponseEntity.ok(order);
     }
+
+    @GetMapping("/{orderId}/track")
+    public ResponseEntity<OrderDTO> trackOrder(@PathVariable Long orderId, Authentication authentication){
+        Long userId = getUserIdFromAuthentication(authentication);
+        OrderDTO order = orderService.trackOrder(userId, orderId);
+        return ResponseEntity.ok(order);
+    }
+
 }
