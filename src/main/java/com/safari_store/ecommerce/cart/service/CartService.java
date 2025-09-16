@@ -130,7 +130,6 @@ public class CartService {
                 });
     }
 
-
     private CartDTO convertToDTO(Cart cart){
         CartDTO dto = new CartDTO();
         dto.setId(cart.getId());
