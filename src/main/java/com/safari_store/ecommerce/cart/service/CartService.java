@@ -96,6 +96,16 @@ public class CartService {
         return convertItemToDTO(cartItem);
     }
 
+    public void removeItemFromCart(Long userId,Long itemId){
+        CartItem cartItem = cartItemRepository.findByUserIdAndItemId(userId,itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart Item not found"));
+
+        Cart cart = cartItem.getCart();
+        cart.removeItem(cartItem);
+        cartItemRepository.delete(cartItem);
+        cartRepository.save(cart);
+    }
+
     private CartDTO convertToDTO(Cart cart){
         CartDTO dto = new CartDTO();
         dto.setId(cart.getId());
