@@ -48,4 +48,11 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/clear")
+    public ResponseEntity<Void> clearCart(Authentication authentication){
+        Long userId = getUserIdFromAuthentication(authentication);
+        cartService.clearCart(userId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
