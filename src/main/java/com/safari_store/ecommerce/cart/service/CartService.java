@@ -106,6 +106,16 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public void clearCart(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+
+        cart.getItems().clear();
+        cart.calculateTotals();
+        cartRepository.save(cart);
+    }
+
+
     private CartDTO convertToDTO(Cart cart){
         CartDTO dto = new CartDTO();
         dto.setId(cart.getId());
