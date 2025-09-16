@@ -2,9 +2,11 @@ package com.safari_store.ecommerce.order.Controller;
 
 
 import com.safari_store.ecommerce.order.DTOS.OrderDTO;
+import com.safari_store.ecommerce.order.DTOS.Request.UpdateOrderStatusRequest;
 import com.safari_store.ecommerce.order.OrderStatus;
 import com.safari_store.ecommerce.order.models.Order;
 import com.safari_store.ecommerce.order.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,12 @@ public class AdminOrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId){
         OrderDTO order = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(order);
+    }
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long orderId, @Valid @RequestParam UpdateOrderStatusRequest request){
+        OrderDTO order = orderService.updateOrderStatus(orderId, request);
         return ResponseEntity.ok(order);
     }
 }
