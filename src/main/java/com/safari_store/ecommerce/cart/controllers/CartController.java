@@ -3,6 +3,7 @@ package com.safari_store.ecommerce.cart.controllers;
 import com.safari_store.ecommerce.cart.DTO.AddToCartRequest;
 import com.safari_store.ecommerce.cart.DTO.CartDTO;
 import com.safari_store.ecommerce.cart.DTO.CartItemDTO;
+import com.safari_store.ecommerce.cart.DTO.UpdateCartItemRequest;
 import com.safari_store.ecommerce.cart.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,4 +34,10 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItem);
     }
 
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<CartItemDTO> updateCartItem(@PathVariable Long itemId, @Valid @RequestBody UpdateCartItemRequest request,Authentication authentication){
+        Long useId = getUserIdFromAuthentication(authentication);
+        CartItemDTO cartItem = cartService.updateCartItem(useId,itemId,request);
+        return ResponseEntity.ok(cartItem);
+    }
 }
