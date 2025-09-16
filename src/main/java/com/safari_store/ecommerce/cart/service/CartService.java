@@ -121,6 +121,16 @@ public class CartService {
         return cart != null && !cart.getItems().isEmpty();
     }
 
+    private Cart getOrCreateCart(Long userId){
+        return cartRepository.findByUserIdWithItems(userId)
+                .orElseGet(() ->{
+                   Cart newCart = new Cart();
+                   newCart.setUserId(userId);
+                   return cartRepository.save(newCart);
+                });
+    }
+
+
     private CartDTO convertToDTO(Cart cart){
         CartDTO dto = new CartDTO();
         dto.setId(cart.getId());
