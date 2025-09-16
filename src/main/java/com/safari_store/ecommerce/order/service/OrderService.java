@@ -102,7 +102,13 @@ public class OrderService {
                 .map(this::convertToDTO);
     }
 
+    @Transactional(readOnly = true)
+    public OrderDTO getOrderById(Long userId,Long orderId){
+        Order order = orderRepository.findByUserIdAndIdWithItems(userId,orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
+        return convertToDTO(order);
+    }
 
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
