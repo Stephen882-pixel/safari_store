@@ -1,9 +1,11 @@
 package com.safari_store.ecommerce.cart.service;
 
 import com.safari_store.ecommerce.cart.DTO.CartDTO;
+import com.safari_store.ecommerce.cart.DTO.CartItemDTO;
 import com.safari_store.ecommerce.cart.Repository.CartItemRepository;
 import com.safari_store.ecommerce.cart.Repository.CartRepository;
 import com.safari_store.ecommerce.cart.models.Cart;
+import com.safari_store.ecommerce.cart.models.CartItem;
 import com.safari_store.ecommerce.products.Repository.ProductRepository;
 import com.safari_store.ecommerce.products.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,19 @@ public class CartService {
         dto.setTotalItems(cart.getTotalItems());
         dto.setCreatedAt(cart.getCreatedAt());
         dto.setUpdatedAt(cart.getUpdatedAt());
+        return dto;
+    }
+
+    private CartItemDTO convertItemToDTO(CartItem item){
+        CartItemDTO dto = new CartItemDTO();
+        dto.setId(item.getId());
+        dto.setProductId(item.getProduct().getId());
+        dto.setProduct(productService.convertToDTO(item.getProduct()));
+        dto.setQuantity(item.getQuantity());
+        dto.setUnitPrice(item.getUnitPrice());
+        dto.setSubtotal(item.getSubtotal());
+        dto.setCreatedAt(item.getCreatedAt());
+        dto.setUpdatedAt(item.getUpdatedAt());
         return dto;
     }
 }

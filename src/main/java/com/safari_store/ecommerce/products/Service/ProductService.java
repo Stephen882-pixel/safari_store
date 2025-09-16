@@ -102,7 +102,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    private ProductDTO convertToDTO(Product product) {
+    public ProductDTO convertToDTO(Product product) {
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
