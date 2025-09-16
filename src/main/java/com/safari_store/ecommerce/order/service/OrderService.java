@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -91,5 +93,42 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    private OrderDTO convertToDTO(Order order){
+        OrderDTO dto = new OrderDTO();
+        dto.setId(order.getId());
+        dto.setOrderNumber(order.getOrderNumber());
+        dto.setUserId(order.getUserId());
+        dto.setItems(order.getItems().stream()
+                .map(this::convertItemToDTO)
+                .collect(Collectors.toList()));
+        dto.setStatus(order.getStatus());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setTotalItems(order.getTotalItems());
 
+
+        dto.setShippingName(order.getShippingName());
+        dto.setShippingEmail(order.getShippingEmail());
+        dto.setShippingPhone(order.getShippingPhone());
+        dto.setShippingAddress(order.getShippingAddress());
+        dto.setShippingCity(order.getShippingCity());
+        dto.setShippingState(order.getShippingState());
+        dto.setShippingPostalCode(order.getShippingPostalCode());
+        dto.setShippingCountry(order.getShippingCountry());
+
+        dto.setTrackingNumber(order.getTrackingNumber());
+        dto.setEstimatedDelivery(order.getEstimatedDelivery());
+        dto.setDeliveredAt(order.getDeliveredAt());
+        dto.setCancelledAt(order.getCancelledAt());
+        dto.setCancelReason(order.getCancellationReason());
+
+
+        dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setPaymentStatus(order.getPaymentStatus());
+        dto.setNotes(order.getNotes());
+
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setUpdatedAt(order.getUpdatedAt());
+
+        return dto;
+    }
 }

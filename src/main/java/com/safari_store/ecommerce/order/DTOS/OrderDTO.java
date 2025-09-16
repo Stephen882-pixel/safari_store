@@ -27,8 +27,8 @@ public class OrderDTO {
     private String shippingAddress;
     private String shippingCity;
     private String shippingState;
-    private String postalCode;
-    private String country;
+    private String shippingPostalCode;
+    private String shippingCountry;
 
     private String trackingNumber;
     private LocalDateTime estimatedDelivery;
