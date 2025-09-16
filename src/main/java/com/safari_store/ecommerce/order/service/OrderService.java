@@ -16,6 +16,8 @@ import com.safari_store.ecommerce.products.Repository.ProductRepository;
 import com.safari_store.ecommerce.products.Service.ProductService;
 import com.safari_store.ecommerce.products.models.Product;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,6 +96,14 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getUsersOrders(Long userId, Pageable pageable){
+        return orderRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable)
+                .map(this::convertToDTO);
+    }
+
+
+
     private OrderDTO convertToDTO(Order order){
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
@@ -132,6 +142,8 @@ public class OrderService {
 
         return dto;
     }
+
+
 
     private OrderItemDTO convertItemToDTO(OrderItem item){
         OrderItemDTO dto = new OrderItemDTO();
