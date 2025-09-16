@@ -40,4 +40,12 @@ public class CartController {
         CartItemDTO cartItem = cartService.updateCartItem(useId,itemId,request);
         return ResponseEntity.ok(cartItem);
     }
+
+    @DeleteMapping("items/{itemId}")
+    public ResponseEntity<Void> removeItemFromCart(@PathVariable Long itemId,Authentication authentication){
+        Long userId = getUserIdFromAuthentication(authentication);
+        cartService.removeItemFromCart(userId,itemId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
