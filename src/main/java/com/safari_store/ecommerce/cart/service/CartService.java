@@ -3,6 +3,7 @@ package com.safari_store.ecommerce.cart.service;
 import com.safari_store.ecommerce.cart.DTO.AddToCartRequest;
 import com.safari_store.ecommerce.cart.DTO.CartDTO;
 import com.safari_store.ecommerce.cart.DTO.CartItemDTO;
+import com.safari_store.ecommerce.cart.DTO.UpdateCartItemRequest;
 import com.safari_store.ecommerce.cart.Repository.CartItemRepository;
 import com.safari_store.ecommerce.cart.Repository.CartRepository;
 import com.safari_store.ecommerce.cart.models.Cart;
@@ -72,6 +73,26 @@ public class CartService {
         cartItem = cartItemRepository.save(cartItem);
         cart.calculateTotals();
         cartRepository.save(cart);
+        return convertItemToDTO(cartItem);
+    }
+
+    public CartItemDTO updateCartItem(Long userId,Long itemId, UpdateCartItemRequest request){
+        CartItem cartItem = cartItemRepository.findByUserIdAndItemId(userId,itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+
+        Product product = cartItem.getProduct();
+        if(product.getStockQuantity() < request.getQuantity()){
+            throw new IllegalArgumentException("Insufficient stock. Available: " + product.getStockQuantity());
+        }
+
+        cartItem.setQuantity(request.getQuantity());
+        cartItem.calculateSubTotal();
+        cartItem = cartItemRepository.save(cartItem);
+
+        Cart cart = cartItem.getCart();
+        cart.calculateTotals();
+        cartRepository.save(cart);
+
         return convertItemToDTO(cartItem);
     }
 
