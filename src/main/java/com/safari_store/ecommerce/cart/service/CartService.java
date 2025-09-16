@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,5 +26,19 @@ public class CartService {
     public CartDTO getUserCart(Long userId) {
         Cart cart = getOrCreateCart(userId);
         return convertToDTO(cart);
+    }
+
+    private CartDTO convertToDTO(Cart cart){
+        CartDTO dto = new CartDTO();
+        dto.setId(cart.getId());
+        dto.setUserId(cart.getUserId());
+        dto.setItems(cart.getItems().stream()
+                .map(this::convertItemToDTO)
+                .collect(Collectors.toList()));
+        dto.setTotalAmount(cart.getTotalAmount());
+        dto.setTotalItems(cart.getTotalItems());
+        dto.setCreatedAt(cart.getCreatedAt());
+        dto.setUpdatedAt(cart.getUpdatedAt());
+        return dto;
     }
 }
