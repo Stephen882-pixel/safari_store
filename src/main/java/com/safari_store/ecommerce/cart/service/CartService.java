@@ -115,6 +115,11 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Transactional(readOnly = true)
+    public boolean hasItemInCart(Long userId){
+        Cart cart = cartRepository.findByUserId(userId).orElse(null);
+        return cart != null && !cart.getItems().isEmpty();
+    }
 
     private CartDTO convertToDTO(Cart cart){
         CartDTO dto = new CartDTO();
