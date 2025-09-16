@@ -4,6 +4,7 @@ import com.safari_store.ecommerce.cart.Repository.CartRepository;
 import com.safari_store.ecommerce.cart.models.Cart;
 import com.safari_store.ecommerce.cart.models.CartItem;
 import com.safari_store.ecommerce.order.DTOS.OrderDTO;
+import com.safari_store.ecommerce.order.DTOS.OrderItemDTO;
 import com.safari_store.ecommerce.order.DTOS.Request.CreateOrderRequest;
 import com.safari_store.ecommerce.order.OrderStatus;
 import com.safari_store.ecommerce.order.Repository.OrderItemRepository;
@@ -129,6 +130,24 @@ public class OrderService {
         dto.setCreatedAt(order.getCreatedAt());
         dto.setUpdatedAt(order.getUpdatedAt());
 
+        return dto;
+    }
+
+    private OrderItemDTO convertItemToDTO(OrderItem item){
+        OrderItemDTO dto = new OrderItemDTO();
+        dto.setId(item.getId());
+        dto.setProductId(item.getProduct().getId());
+        dto.setProduct(productService.convertToDTO(item.getProduct()));
+        dto.setQuantity(item.getQuantity());
+        dto.setUnitPrice(item.getUnitPrice());
+        dto.setSubtotal(item.getSubtotal());
+
+
+        dto.setProductName(item.getProductName());
+        dto.setProductDescription(item.getProductDescription());
+        dto.setProductImageUrl(item.getProductImageUrl());
+
+        dto.setCreatedAt(item.getCreatedAt());
         return dto;
     }
 }
