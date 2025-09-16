@@ -35,4 +35,11 @@ public class OrderController {
         Page<OrderDTO> orders = orderService.getUsersOrders(userId, pageable);
         return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId, Authentication authentication){
+        Long userId = getUserIdFromAuthentication(authentication);
+        OrderDTO order = orderService.getOrderById(userId, orderId);
+        return ResponseEntity.ok(order);
+    }
 }
