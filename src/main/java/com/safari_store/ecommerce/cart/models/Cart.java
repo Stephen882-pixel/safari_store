@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+
 @Table(name = "carts")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Cart {
 
     @Id

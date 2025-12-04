@@ -13,11 +13,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
+
 @Table(name = "cart_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class CartItem {
 
     @Id
