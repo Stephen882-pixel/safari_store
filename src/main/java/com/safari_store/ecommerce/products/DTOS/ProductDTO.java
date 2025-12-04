@@ -29,13 +29,14 @@ public class ProductDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal price;
 
+    @NotNull(message = "Stock quantity is required")
     @Min(value = 0, message = "Stock quantity cannot be negative")
     private Integer stockQuantity;
 
     private String imageUrl;
     private List<String> additionalImagesUrls;
     private Boolean active;
-    private Boolean featured;
+    private boolean featured;
 
     @NotNull(message = "Category ID is required")
     private Long categoryId;

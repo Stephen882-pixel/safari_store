@@ -86,7 +86,7 @@ public class ProductService {
         existingProduct.setStockQuantity(productDTO.getStockQuantity());
         existingProduct.setImageUrl(productDTO.getImageUrl());
         existingProduct.setAdditionalImages(productDTO.getAdditionalImagesUrls());
-        existingProduct.setFeatured(productDTO.getFeatured());
+        existingProduct.setFeatured(productDTO.isFeatured());
         existingProduct.setActive(productDTO.getActive());
         existingProduct.setCategory(category);
         existingProduct.setTags(productDTO.getTags());
@@ -139,9 +139,9 @@ public class ProductService {
         product.setStockQuantity(dto.getStockQuantity());
         product.setImageUrl(dto.getImageUrl());
         product.setAdditionalImages(dto.getAdditionalImagesUrls());
-        product.setFeatured(dto.getFeatured());
+        product.setFeatured(dto.isFeatured());
         product.setActive(dto.getActive() != null ? dto.getActive(): true);
-        product.setFeatured(dto.getFeatured() != null ? dto.getFeatured(): false);
+        product.setFeatured(dto.isFeatured());
         product.setTags(dto.getTags());
         return product;
     }

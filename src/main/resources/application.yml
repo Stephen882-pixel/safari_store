@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecommerce_db
+    url: jdbc:postgresql://localhost:5432/safari_store_db
     username: postgres
     password: Kundan@1234
     driver-class-name: org.postgresql.Driver
@@ -19,7 +19,7 @@ spring:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
     username: ${MAIL_USERNAME:ondeyostephen0@gmail.com}
-    password: ${MAIL_PASSWORD:yvhc ebmf dacy tfdz}
+    password: ${MAIL_PASSWORD:ezfj jpbq qufz eivd}
     from: ${MAIL_FROM:ondeyostephen0@gmail.com}
     properties:
       mail:
@@ -51,7 +51,7 @@ app:
     base-path: /api/v1
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8081}
   servlet:
     context-path: /
   error:
@@ -80,5 +80,5 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
     filter: true
-  packages-to-scan: com.kenamart.ecommerce.controller
+  packages-to-scan: com.safari_store.ecommerce
   paths-to-match: /api/v1/**
